@@ -1,7 +1,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- 优化：移除 user-scalable=no，允许用户缩放查看细节 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>返费差额模拟计算器</title>
     <style>
         /* 全局样式 */
@@ -12,9 +13,14 @@
             color: #333; 
             padding: 20px;
             line-height: 1.6;
+            /* 新增：防止iOS键盘弹起时页面异常滚动 */
+            min-height: 100vh; 
+            overflow-y: auto; 
         }
+
         /* 容器卡片 */
         .container { 
+            width: 100%; /* 新增：确保小屏不溢出 */
             max-width: 480px; 
             margin: 0 auto; 
             background: #fff; 
@@ -22,6 +28,7 @@
             border-radius: 16px; 
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
+
         h2 { text-align: center; margin-bottom: 25px; color: #2c3e50; font-size: 1.5rem; }
         
         /* 表单组 */
@@ -29,18 +36,25 @@
         label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; font-size: 0.95rem; }
         
         /* 输入框样式 */
-        input[type="text"] {
+        input[type="number"] {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid #ddd;
             border-radius: 8px;
-            font-size: 16px; 
+            font-size: 16px; /* 关键：iOS下必须>=16px，否则会自动缩放页面 */
             transition: border-color 0.3s;
             outline: none;
             background-color: #fafafa;
             text-align: right; 
+            /* 去除数字输入框的上下箭头 */
+            -moz-appearance: textfield; 
         }
-        input[type="text"]:focus {
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"]:focus {
             border-color: #3498db;
             background-color: #fff;
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
@@ -64,7 +78,7 @@
             font-size: 0.9rem;
             transition: all 0.3s ease;
             color: #666;
-            user-select: none; /* 防止点击时选中文本 */
+            user-select: none;
         }
         .mode-option.active {
             background: #fff;
@@ -95,11 +109,11 @@
             background-color: #e8f6fd;
             border-radius: 8px;
             text-align: center;
-            display: none; /* 默认隐藏 */
+            display: none;
             border: 1px solid #bde0fe;
         }
         .result-title { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
-        .result-value { font-size: 2rem; color: #2980b9; font-weight: bold; }
+        .result-value { font-size: 2rem; color: #2980b9; font-weight: bold; word-break: break-all; }
 
         /* 底部说明 */
         .info-box { 
@@ -111,8 +125,20 @@
             font-size: 12px; 
             color: #666; 
         }
-        .info-box h3 { font-size: 14px; color: #d35400; margin-bottom: 8px; }
+        .info-box h3 { font-size: 14px; color: #d35400; margin-bottom: 8px; margin-top: 10px; }
+        .info-box h3:first-child { margin-top: 0; }
         .info-box ul { padding-left: 18px; margin-bottom: 8px; }
+        .info-box li { margin-bottom: 4px; }
+
+        /* 📱 移动端专属适配 */
+        @media screen and (max-width: 480px) {
+            body { padding: 10px; }
+            .container { padding: 20px; border-radius: 12px; }
+            h2 { font-size: 1.3rem; margin-bottom: 20px; }
+            .btn-calc { padding: 14px; font-size: 1rem; }
+            .result-value { font-size: 1.8rem; }
+            .info-box { font-size: 11px; padding: 12px; }
+        }
     </style>
 </head>
 <body>
@@ -122,7 +148,6 @@
 
     <!-- 模式切换 -->
     <div class="mode-switch">
-        <!-- 注意：这里通过 onclick 调用 switchMode 函数 -->
         <div class="mode-option active" id="btn-package" onclick="switchMode('package')">打包价模式</div>
         <div class="mode-option" id="btn-diff" onclick="switchMode('diff')">差价模式</div>
     </div>
@@ -130,19 +155,18 @@
     <!-- 输入区域 -->
     <div class="form-group">
         <label>请输入工时 (小时)</label>
-        <input type="text" id="hours" inputmode="decimal" placeholder="例如：200.5">
+        <input type="number" id="hours" inputmode="decimal" placeholder="例如：200.5">
     </div>
 
     <div class="form-group">
         <label>请输入单价 (元/小时)</label>
-        <input type="text" id="price" inputmode="decimal" placeholder="例如：25.5">
+        <input type="number" id="price" inputmode="decimal" placeholder="例如：25.5">
     </div>
 
     <!-- 打包价特有输入框 -->
-    <!-- ID 修正为 group-standard -->
     <div class="form-group" id="group-standard">
         <label>同工同酬应发薪资 (元)</label>
-        <input type="text" id="standard_salary" inputmode="decimal" placeholder="例如：3500">
+        <input type="number" id="standard_salary" inputmode="decimal" placeholder="例如：3500">
     </div>
 
     <button class="btn-calc" onclick="calculateSalary()">立即计算</button>
@@ -155,7 +179,7 @@
 
     <!-- 底部说明 -->
     <div class="info-box">
-        <h3> 同工同酬薪资架构</h3>
+        <h3>同工同酬薪资架构</h3>
         <ul>
             <li>底薪：2,490元</li>
             <li>加班一：1.5倍时薪</li>
@@ -165,7 +189,7 @@
             <li>岗位津贴：0-800元</li>
             <li>夜班津贴：15元/天</li>
         </ul>
-	<h3>特别说明</h3>
+        <h3>特别说明</h3>
         <ul>
             <li>打包价打包同工同酬所有补贴</li>
             <li>底薪/餐补为正常5天8小时制</li>
@@ -173,47 +197,31 @@
             <li>加班二：周六周日为加班二（调班除外）</li>
             <li>加班三：国家法定节假日为加班三</li>
         </ul>
-	<p style="margin-top:10px; color:#999;">*本工具仅供参考，具体以财务核算为准</p>
+        <p style="margin-top:10px; color:#999;">*本工具仅供参考，具体以财务核算为准</p>
     </div>
 </div>
 
 <script>
-    // 定义全局变量存储当前模式
     let currentMode = 'package'; 
-
-    // 获取DOM元素
-    // 修正：ID 必须与 HTML 中的 id="group-standard" 一致
     const standardGroup = document.getElementById('group-standard'); 
     const btnPackage = document.getElementById('btn-package');
     const btnDiff = document.getElementById('btn-diff');
     
-    // 1. 界面联动逻辑：控制输入框显示与按钮高亮
     function switchMode(mode) {
         currentMode = mode;
-        
-        // 切换按钮的高亮状态
         if (mode === 'package') {
             btnPackage.classList.add('active');
             btnDiff.classList.remove('active');
-            
-            // 打包价模式：显示同工同酬输入框
             standardGroup.style.display = 'block';
         } else {
             btnDiff.classList.add('active');
             btnPackage.classList.remove('active');
-            
-            // 差价模式：隐藏同工同酬输入框
             standardGroup.style.display = 'none';
         }
-        
-        // 切换模式后隐藏之前的计算结果，避免混淆
         document.getElementById('result-box').style.display = 'none';
     }
 
-    // 2. 核心计算逻辑
     function calculateSalary() {
-        // 获取输入值（处理空值情况，默认为0）
-        // parseFloat 会自动忽略非数字字符，确保计算安全
         let hours = parseFloat(document.getElementById('hours').value) || 0;
         let price = parseFloat(document.getElementById('price').value) || 0;
         let standard = parseFloat(document.getElementById('standard_salary').value) || 0;
@@ -224,25 +232,15 @@
         const resultValue = document.getElementById('final-result');
 
         if (currentMode === 'package') {
-            // --- 打包价逻辑 ---
-            // 公式：打包价 = (工时 * 工价) - 同工同酬(应发)
             let totalValue = hours * price;
             result = totalValue - standard;
-
-            // 业务保护：如果算出来是负数（比如干的活还没底薪多），通常不发钱，归零处理
-            if (result < 0) {
-                result = 0; 
-            }
-            
+            if (result < 0) result = 0; 
             resultLabel.innerText = "打包价差额：";
         } else {
-            // --- 差价模式逻辑 ---
-            // 公式：差价 = 工时 * 工价
             result = hours * price;
             resultLabel.innerText = "差价总额：";
         }
 
-        // 3. 显示结果（保留2位小数）
         resultValue.innerText = result.toFixed(2);
         resultBox.style.display = 'block';
     }
