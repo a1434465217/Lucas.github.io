@@ -1,251 +1,327 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 核心修复：设置视口，禁止用户缩放，确保1:1显示 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>综合薪资与返费计算器</title>
+    <!-- 核心修复：禁止缩放，强制宽度等于设备宽度 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>嘉善厂区薪资计算器</title>
     <style>
-        :root {
-            --primary-color: #007AFF;
-            --primary-light: #E6F2FF;
-            --bg-color: #F5F7FA;
-            --card-bg: #FFFFFF;
-            --text-main: #1D1D1F;
-            --text-sub: #86868B;
-            --border-color: #E5E5EA;
-            --success-color: #34C759;
-            --danger-color: #FF3B30;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        /* 全局重置 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 15px; /* 手机端适当减小内边距 */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f2f2f7; /* iOS 风格浅灰背景 */
+            color: #1c1c1e;
             line-height: 1.5;
-            /* 防止iOS Safari底部工具栏遮挡 */
-            padding-bottom: env(safe-area-inset-bottom, 20px); 
+            /* 确保背景铺满，消除白边 */
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden; /* 禁止横向滚动 */
         }
 
-        .container { 
-            max-width: 600px; 
-            margin: 0 auto; 
-        }
-        
-        /* 头部样式 */
-        header { text-align: center; margin-bottom: 20px; }
-        h1 { font-size: 1.4rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
-        .subtitle { 
-            font-size: 0.75rem; 
-            color: var(--text-sub); 
-            background: #fff; 
-            display: inline-block; 
-            padding: 4px 10px; 
-            border-radius: 12px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03); 
+        /* 容器限制最大宽度，但在手机上占满全屏 */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+            padding-bottom: 40px;
         }
 
-        /* 卡片通用样式 */
-        .card {
-            background: var(--card-bg);
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-top: 10px;
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #8e8e93;
+            background: rgba(0,0,0,0.05);
+            display: inline-block;
+            padding: 4px 12px;
             border-radius: 12px;
-            padding: 16px; /* 手机端内边距减小 */
-            margin-bottom: 15px;
-            box-shadow: var(--shadow);
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
             border: 1px solid rgba(0,0,0,0.02);
         }
+
         .card-header {
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 12px;
         }
-        .card-header h2 { font-size: 1rem; font-weight: 600; color: var(--text-main); }
-        .card-icon { margin-right: 8px; font-size: 1.1rem; }
+
+        .card-header h2 {
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .card-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
 
         /* 分组标题 */
         .group-title {
-            font-size: 0.85rem;
+            font-size: 14px;
             font-weight: 600;
-            color: var(--primary-color);
-            margin: 15px 0 10px 0;
+            color: #007aff;
+            margin: 16px 0 8px 0;
             display: flex;
             align-items: center;
         }
+        
         .group-title::before {
             content: '';
             display: block;
-            width: 3px;
-            height: 12px;
-            background: var(--primary-color);
+            width: 4px;
+            height: 14px;
+            background: #007aff;
             border-radius: 2px;
             margin-right: 6px;
         }
 
-        /* 输入框网格布局 - 响应式核心 */
+        /* 响应式网格布局 */
         .input-grid {
             display: grid;
             grid-template-columns: 1fr 1fr; /* 默认两列 */
             gap: 12px;
         }
-        /* 当屏幕宽度小于400px时，强制变为单列，或者保持两列但缩小间距 */
-        @media (max-width: 380px) {
-            .input-grid { grid-template-columns: 1fr; }
-        }
-        
-        .full-width { grid-column: span 2; }
-        @media (max-width: 380px) { .full-width { grid-column: span 1; } }
 
-        .input-item { position: relative; }
+        /* 全宽元素 */
+        .full-width {
+            grid-column: span 2;
+        }
+
+        /* 极窄屏幕适配（如 iPhone SE） */
+        @media (max-width: 350px) {
+            .input-grid {
+                grid-template-columns: 1fr; /* 变为单列 */
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+        }
+
+        .input-item {
+            position: relative;
+        }
+
         .input-item label {
             display: block;
-            font-size: 0.75rem;
-            color: var(--text-sub);
-            margin-bottom: 4px;
+            font-size: 13px;
+            color: #8e8e93;
+            margin-bottom: 6px;
             font-weight: 500;
         }
+
         .input-wrapper {
             position: relative;
             display: flex;
             align-items: center;
         }
+
         .input-icon {
             position: absolute;
             left: 10px;
-            font-size: 0.9rem;
+            font-size: 16px;
             z-index: 1;
-            opacity: 0.7;
+            opacity: 0.6;
         }
-        input[type="number"], input[type="date"] {
+
+        /* 输入框样式优化 */
+        input[type="number"], 
+        input[type="date"],
+        select {
             width: 100%;
-            padding: 10px 10px 10px 32px; /* 左侧留出图标位置 */
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 16px; /* 防止iOS放大页面 */
-            background: #FAFAFA;
-            color: var(--text-main);
+            padding: 12px 12px 12px 36px; /* 左侧留出图标位置 */
+            border: 1px solid #e5e5ea;
+            border-radius: 10px;
+            font-size: 16px; /* 关键：16px 防止 iOS 自动缩放页面 */
+            background: #f9f9fb;
+            color: #000;
             transition: all 0.2s;
-            font-weight: 500;
-            height: 42px; /* 固定高度，视觉更整齐 */
+            appearance: none; /* 移除默认样式 */
+            -webkit-appearance: none;
         }
+
         input:focus {
-            border-color: var(--primary-color);
+            border-color: #007aff;
             background: #fff;
-            box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
             outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
         }
+
         input[readonly] {
-            background: #F2F2F7;
-            color: var(--text-sub);
+            background: #f2f2f7;
+            color: #8e8e93;
             border-color: transparent;
         }
 
-        /* 模式切换开关 */
+        /* 切换开关样式 */
         .toggle-container {
-            background: #F2F2F7;
+            background: #e5e5ea;
             border-radius: 8px;
             padding: 2px;
             display: flex;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
+
         .toggle-option {
             flex: 1;
             text-align: center;
-            padding: 8px 4px;
-            font-size: 0.85rem;
+            padding: 8px 0;
+            font-size: 14px;
             font-weight: 600;
-            color: var(--text-sub);
+            color: #8e8e93;
             border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-        .toggle-option.active {
-            background: #fff;
-            color: var(--primary-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s;
         }
 
-        /* 按钮 */
+        .toggle-option.active {
+            background: #fff;
+            color: #007aff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* 按钮样式 */
         .btn-calc {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #007AFF, #0056CC);
+            background: #007aff;
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 12px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 122, 255, 0.25);
-            transition: transform 0.1s;
             margin-top: 20px;
-            /* 增加触摸区域 */
-            min-height: 48px; 
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
+            transition: transform 0.1s;
         }
-        .btn-calc:active { transform: scale(0.98); }
 
-        /* 结果区域 */
+        .btn-calc:active {
+            transform: scale(0.98);
+            background: #0062cc;
+        }
+
+        /* 结果展示区 */
         .result-card {
             margin-top: 20px;
             background: #fff;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
-            border: 1px solid var(--border-color);
+            border: 1px solid #e5e5ea;
             animation: slideUp 0.3s ease-out;
         }
+
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
         .result-header {
-            background: var(--primary-light);
-            padding: 10px 14px;
-            font-size: 0.85rem;
+            background: #f0f8ff;
+            padding: 10px 16px;
+            font-size: 14px;
             font-weight: 600;
-            color: var(--primary-color);
-            border-bottom: 1px solid rgba(0,122,255,0.1);
+            color: #007aff;
+            border-bottom: 1px solid #e5e5ea;
         }
-        .result-list { padding: 0; }
+
+        .result-list {
+            padding: 0;
+        }
+
         .result-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 14px;
-            border-bottom: 1px dashed #eee;
-            font-size: 0.9rem;
+            padding: 10px 16px;
+            border-bottom: 1px dashed #f0f0f0;
+            font-size: 14px;
         }
-        .result-item:last-child { border-bottom: none; }
-        .result-item .label { color: #666; }
-        .result-item .val { font-weight: 500; color: #333; }
-        .result-item.deduct .val { color: var(--danger-color); }
-        
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-item .label {
+            color: #666;
+        }
+
+        .result-item .val {
+            font-weight: 500;
+            color: #000;
+        }
+
+        .result-item.deduct .val {
+            color: #ff3b30;
+        }
+
         .result-total {
-            background: #FAFAFA;
-            padding: 14px;
+            background: #fafafa;
+            padding: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 2px solid var(--primary-color);
+            border-top: 2px solid #007aff;
         }
-        .result-total .label { font-weight: 700; color: var(--text-main); font-size: 0.95rem; }
-        .result-total .val { font-size: 1.3rem; font-weight: 800; color: var(--primary-color); }
+
+        .result-total .label {
+            font-weight: 700;
+            color: #000;
+            font-size: 15px;
+        }
+
+        .result-total .val {
+            font-size: 20px;
+            font-weight: 800;
+            color: #007aff;
+        }
 
         /* 底部说明 */
         .footer-info {
-            background: #FFF8E1;
-            border-left: 3px solid #FFC107;
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
             padding: 12px;
             border-radius: 4px;
-            font-size: 0.75rem;
-            color: #795548;
-            margin-top: 25px;
-            line-height: 1.4;
+            font-size: 12px;
+            color: #666;
+            margin-top: 24px;
+            line-height: 1.6;
         }
-        .footer-info h4 { margin-bottom: 6px; color: #F57F17; font-size: 0.85rem; }
-        .footer-info ul { padding-left: 18px; }
-        .footer-info li { margin-bottom: 3px; }
+
+        .footer-info h4 {
+            margin-bottom: 6px;
+            color: #d39e00;
+            font-size: 13px;
+        }
+
+        .footer-info ul {
+            padding-left: 18px;
+        }
     </style>
 </head>
 <body>
@@ -253,7 +329,7 @@
 <div class="container">
     <header>
         <h1>💰 薪资与返费计算器</h1>
-        <div class="subtitle">嘉善厂区专用 · 仅供参考</div>
+        <div class="subtitle">嘉善厂区专用 · 移动端适配版</div>
     </header>
 
     <!-- ================= 板块一：应发薪资计算 ================= -->
@@ -354,9 +430,9 @@
                 <div class="result-list">
                     <div class="result-item"><span class="label">折算底薪</span><span class="val" id="res-base">￥0.00</span></div>
                     <div class="result-item"><span class="label">加班费合计</span><span class="val" id="res-ot-total">￥0.00</span></div>
-                    <div class="result-item"><span class="label"> ├─ 平时 (1.5x)</span><span class="val" style="font-size:0.8rem;color:#888" id="res-ot1">￥0.00</span></div>
-                    <div class="result-item"><span class="label"> ├─ 周末 (2.0x)</span><span class="val" style="font-size:0.8rem;color:#888" id="res-ot2">￥0.00</span></div>
-                    <div class="result-item"><span class="label"> └─ 法定 (3.0x)</span><span class="val" style="font-size:0.8rem;color:#888" id="res-ot3">￥0.00</span></div>
+                    <div class="result-item"><span class="label"> ├─ 平时 (1.5x)</span><span class="val" style="font-size:12px;color:#888" id="res-ot1">￥0.00</span></div>
+                    <div class="result-item"><span class="label"> ├─ 周末 (2.0x)</span><span class="val" style="font-size:12px;color:#888" id="res-ot2">￥0.00</span></div>
+                    <div class="result-item"><span class="label"> └─ 法定 (3.0x)</span><span class="val" style="font-size:12px;color:#888" id="res-ot3">￥0.00</span></div>
                     <div class="result-item"><span class="label">生活补贴</span><span class="val" id="res-meal">￥300.00</span></div>
                     <div class="result-item"><span class="label">夜班津贴</span><span class="val" id="res-night">￥0.00</span></div>
                     <div class="result-item"><span class="label">其他津贴</span><span class="val" id="res-other-allow">￥0.00</span></div>
@@ -408,7 +484,7 @@
         </div>
 
         <div id="group-meal-allowance" style="margin-top:15px">
-            <label style="font-size:0.85rem;font-weight:600;margin-bottom:8px;display:block">餐补扣除方案</label>
+            <label style="font-size:14px;font-weight:600;margin-bottom:8px;display:block">餐补扣除方案</label>
             <div class="toggle-container">
                 <div class="toggle-option active" id="btn-first-month" onclick="switchMealMode('first')">首月入职</div>
                 <div class="toggle-option" id="btn-non-first-month" onclick="switchMealMode('non-first')">非首月</div>
@@ -441,8 +517,8 @@
             <div class="result-card">
                 <div class="result-header">🎉 预计到手返费</div>
                 <div class="result-total" style="border-top:none; padding: 20px;">
-                    <span class="label" id="result-label" style="font-size:0.85rem;color:#666">打包差额：</span>
-                    <span class="val" id="final-result" style="color:var(--success-color)">￥0.00</span>
+                    <span class="label" id="result-label" style="font-size:14px;color:#666">打包差额：</span>
+                    <span class="val" id="final-result" style="color:#34c759">￥0.00</span>
                 </div>
             </div>
         </div>
