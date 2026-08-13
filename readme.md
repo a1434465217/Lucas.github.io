@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 核心修复：设置视口，禁止用户缩放，确保1:1显示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>综合薪资与返费计算器</title>
     <style>
         :root {
@@ -15,75 +15,96 @@
             --border-color: #E5E5EA;
             --success-color: #34C759;
             --danger-color: #FF3B30;
-            --shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding: 20px;
+            padding: 15px; /* 手机端适当减小内边距 */
             line-height: 1.5;
+            /* 防止iOS Safari底部工具栏遮挡 */
+            padding-bottom: env(safe-area-inset-bottom, 20px); 
         }
-        .container { max-width: 580px; margin: 0 auto; }
+
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+        }
         
         /* 头部样式 */
-        header { text-align: center; margin-bottom: 25px; }
-        h1 { font-size: 1.6rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; letter-spacing: -0.5px; }
-        .subtitle { font-size: 0.85rem; color: var(--text-sub); background: #fff; display: inline-block; padding: 4px 12px; border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        header { text-align: center; margin-bottom: 20px; }
+        h1 { font-size: 1.4rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
+        .subtitle { 
+            font-size: 0.75rem; 
+            color: var(--text-sub); 
+            background: #fff; 
+            display: inline-block; 
+            padding: 4px 10px; 
+            border-radius: 12px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03); 
+        }
 
         /* 卡片通用样式 */
         .card {
             background: var(--card-bg);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
+            border-radius: 12px;
+            padding: 16px; /* 手机端内边距减小 */
+            margin-bottom: 15px;
             box-shadow: var(--shadow);
             border: 1px solid rgba(0,0,0,0.02);
         }
         .card-header {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
             border-bottom: 1px solid var(--border-color);
         }
-        .card-header h2 { font-size: 1.1rem; font-weight: 600; color: var(--text-main); }
-        .card-icon { margin-right: 10px; font-size: 1.2rem; }
+        .card-header h2 { font-size: 1rem; font-weight: 600; color: var(--text-main); }
+        .card-icon { margin-right: 8px; font-size: 1.1rem; }
 
         /* 分组标题 */
         .group-title {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--primary-color);
-            margin: 24px 0 12px 0;
+            margin: 15px 0 10px 0;
             display: flex;
             align-items: center;
         }
         .group-title::before {
             content: '';
             display: block;
-            width: 4px;
-            height: 14px;
+            width: 3px;
+            height: 12px;
             background: var(--primary-color);
             border-radius: 2px;
-            margin-right: 8px;
+            margin-right: 6px;
         }
 
-        /* 输入框网格布局 */
+        /* 输入框网格布局 - 响应式核心 */
         .input-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: 1fr 1fr; /* 默认两列 */
+            gap: 12px;
         }
+        /* 当屏幕宽度小于400px时，强制变为单列，或者保持两列但缩小间距 */
+        @media (max-width: 380px) {
+            .input-grid { grid-template-columns: 1fr; }
+        }
+        
         .full-width { grid-column: span 2; }
+        @media (max-width: 380px) { .full-width { grid-column: span 1; } }
 
         .input-item { position: relative; }
         .input-item label {
             display: block;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-sub);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             font-weight: 500;
         }
         .input-wrapper {
@@ -93,25 +114,27 @@
         }
         .input-icon {
             position: absolute;
-            left: 12px;
-            font-size: 1rem;
+            left: 10px;
+            font-size: 0.9rem;
             z-index: 1;
+            opacity: 0.7;
         }
         input[type="number"], input[type="date"] {
             width: 100%;
-            padding: 12px 12px 12px 38px; /* 左侧留出图标位置 */
+            padding: 10px 10px 10px 32px; /* 左侧留出图标位置 */
             border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 15px;
+            border-radius: 8px;
+            font-size: 16px; /* 防止iOS放大页面 */
             background: #FAFAFA;
             color: var(--text-main);
             transition: all 0.2s;
             font-weight: 500;
+            height: 42px; /* 固定高度，视觉更整齐 */
         }
         input:focus {
             border-color: var(--primary-color);
             background: #fff;
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
             outline: none;
         }
         input[readonly] {
@@ -123,62 +146,64 @@
         /* 模式切换开关 */
         .toggle-container {
             background: #F2F2F7;
-            border-radius: 10px;
-            padding: 4px;
+            border-radius: 8px;
+            padding: 2px;
             display: flex;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .toggle-option {
             flex: 1;
             text-align: center;
-            padding: 10px;
-            font-size: 0.9rem;
+            padding: 8px 4px;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--text-sub);
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s;
         }
         .toggle-option.active {
             background: #fff;
             color: var(--primary-color);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         /* 按钮 */
         .btn-calc {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             background: linear-gradient(135deg, #007AFF, #0056CC);
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
-            transition: transform 0.1s, box-shadow 0.2s;
-            margin-top: 25px;
+            box-shadow: 0 4px 10px rgba(0, 122, 255, 0.25);
+            transition: transform 0.1s;
+            margin-top: 20px;
+            /* 增加触摸区域 */
+            min-height: 48px; 
         }
-        .btn-calc:active { transform: scale(0.98); box-shadow: 0 2px 6px rgba(0, 122, 255, 0.2); }
+        .btn-calc:active { transform: scale(0.98); }
 
-        /* 结果区域 - 账单风格 */
+        /* 结果区域 */
         .result-card {
-            margin-top: 25px;
+            margin-top: 20px;
             background: #fff;
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
             border: 1px solid var(--border-color);
-            animation: slideDown 0.3s ease-out;
+            animation: slideUp 0.3s ease-out;
         }
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .result-header {
             background: var(--primary-light);
-            padding: 12px 16px;
-            font-size: 0.9rem;
+            padding: 10px 14px;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--primary-color);
             border-bottom: 1px solid rgba(0,122,255,0.1);
@@ -187,9 +212,9 @@
         .result-item {
             display: flex;
             justify-content: space-between;
-            padding: 12px 16px;
+            padding: 10px 14px;
             border-bottom: 1px dashed #eee;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
         .result-item:last-child { border-bottom: none; }
         .result-item .label { color: #666; }
@@ -198,28 +223,29 @@
         
         .result-total {
             background: #FAFAFA;
-            padding: 16px;
+            padding: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-top: 2px solid var(--primary-color);
         }
-        .result-total .label { font-weight: 700; color: var(--text-main); font-size: 1rem; }
-        .result-total .val { font-size: 1.4rem; font-weight: 800; color: var(--primary-color); }
+        .result-total .label { font-weight: 700; color: var(--text-main); font-size: 0.95rem; }
+        .result-total .val { font-size: 1.3rem; font-weight: 800; color: var(--primary-color); }
 
         /* 底部说明 */
         .footer-info {
             background: #FFF8E1;
-            border-left: 4px solid #FFC107;
-            padding: 15px;
+            border-left: 3px solid #FFC107;
+            padding: 12px;
             border-radius: 4px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #795548;
-            margin-top: 30px;
+            margin-top: 25px;
+            line-height: 1.4;
         }
-        .footer-info h4 { margin-bottom: 8px; color: #F57F17; }
-        .footer-info ul { padding-left: 20px; }
-        .footer-info li { margin-bottom: 4px; }
+        .footer-info h4 { margin-bottom: 6px; color: #F57F17; font-size: 0.85rem; }
+        .footer-info ul { padding-left: 18px; }
+        .footer-info li { margin-bottom: 3px; }
     </style>
 </head>
 <body>
@@ -240,14 +266,14 @@
         <div class="group-title">出勤与底薪</div>
         <div class="input-grid">
             <div class="input-item full-width">
-                <label>底薪 (元)</label>
+                <label>固定底薪 (元)</label>
                 <div class="input-wrapper">
                     <span class="input-icon">🔒</span>
                     <input type="number" id="base_salary" value="2490" readonly>
                 </div>
             </div>
             <div class="input-item">
-                <label>计薪天数(当月不含周末和法定假日的总天数)</label>
+                <label>计薪天数</label>
                 <div class="input-wrapper">
                     <span class="input-icon">📅</span>
                     <input type="number" id="scheduled_days" placeholder="22" inputmode="numeric">
@@ -290,28 +316,28 @@
         <div class="group-title">津贴与扣除</div>
         <div class="input-grid">
             <div class="input-item">
-                <label>餐补</label>
+                <label>固定餐补</label>
                 <div class="input-wrapper">
                     <span class="input-icon">🍱</span>
                     <input type="number" id="meal_allowance" value="300" readonly>
                 </div>
             </div>
             <div class="input-item">
-                <label>夜班出勤天数</label>
+                <label>夜班天数</label>
                 <div class="input-wrapper">
                     <span class="input-icon">🌙</span>
                     <input type="number" id="night_shift_days" placeholder="0" inputmode="numeric">
                 </div>
             </div>
             <div class="input-item">
-                <label>其他津贴(岗位津贴...)</label>
+                <label>其他津贴</label>
                 <div class="input-wrapper">
                     <span class="input-icon">➕</span>
                     <input type="number" id="other_allowance" placeholder="0" inputmode="decimal">
                 </div>
             </div>
             <div class="input-item">
-                <label>其他扣除(病假/事假...)</label>
+                <label>其他扣除</label>
                 <div class="input-wrapper">
                     <span class="input-icon">➖</span>
                     <input type="number" id="other_deduction" placeholder="0" inputmode="decimal">
@@ -328,9 +354,9 @@
                 <div class="result-list">
                     <div class="result-item"><span class="label">折算底薪</span><span class="val" id="res-base">￥0.00</span></div>
                     <div class="result-item"><span class="label">加班费合计</span><span class="val" id="res-ot-total">￥0.00</span></div>
-                    <div class="result-item"><span class="label"> ├─ 平时 (1.5x)</span><span class="val" style="font-size:0.85rem;color:#888" id="res-ot1">￥0.00</span></div>
-                    <div class="result-item"><span class="label"> ├─ 周末 (2.0x)</span><span class="val" style="font-size:0.85rem;color:#888" id="res-ot2">￥0.00</span></div>
-                    <div class="result-item"><span class="label"> └─ 法定 (3.0x)</span><span class="val" style="font-size:0.85rem;color:#888" id="res-ot3">￥0.00</span></div>
+                    <div class="result-item"><span class="label"> ├─ 平时 (1.5x)</span><span class="val" style="font-size:0.8rem;color:#888" id="res-ot1">￥0.00</span></div>
+                    <div class="result-item"><span class="label"> ├─ 周末 (2.0x)</span><span class="val" style="font-size:0.8rem;color:#888" id="res-ot2">￥0.00</span></div>
+                    <div class="result-item"><span class="label"> └─ 法定 (3.0x)</span><span class="val" style="font-size:0.8rem;color:#888" id="res-ot3">￥0.00</span></div>
                     <div class="result-item"><span class="label">生活补贴</span><span class="val" id="res-meal">￥300.00</span></div>
                     <div class="result-item"><span class="label">夜班津贴</span><span class="val" id="res-night">￥0.00</span></div>
                     <div class="result-item"><span class="label">其他津贴</span><span class="val" id="res-other-allow">￥0.00</span></div>
@@ -373,7 +399,7 @@
             </div>
         </div>
 
-        <div class="input-item full-width" id="group-standard" style="margin-top:15px">
+        <div class="input-item full-width" id="group-standard" style="margin-top:12px">
             <label>同工同酬应发薪资 (可手动修改)</label>
             <div class="input-wrapper">
                 <span class="input-icon">💵</span>
@@ -381,8 +407,8 @@
             </div>
         </div>
 
-        <div id="group-meal-allowance" style="margin-top:20px">
-            <label style="font-size:0.9rem;font-weight:600;margin-bottom:10px;display:block">餐补扣除方案</label>
+        <div id="group-meal-allowance" style="margin-top:15px">
+            <label style="font-size:0.85rem;font-weight:600;margin-bottom:8px;display:block">餐补扣除方案</label>
             <div class="toggle-container">
                 <div class="toggle-option active" id="btn-first-month" onclick="switchMealMode('first')">首月入职</div>
                 <div class="toggle-option" id="btn-non-first-month" onclick="switchMealMode('non-first')">非首月</div>
@@ -414,8 +440,8 @@
         <div id="part2-result-box" style="display:none; margin-top:20px;">
             <div class="result-card">
                 <div class="result-header">🎉 预计到手返费</div>
-                <div class="result-total" style="border-top:none; padding: 25px;">
-                    <span class="label" id="result-label" style="font-size:0.9rem;color:#666">打包差额：</span>
+                <div class="result-total" style="border-top:none; padding: 20px;">
+                    <span class="label" id="result-label" style="font-size:0.85rem;color:#666">打包差额：</span>
                     <span class="val" id="final-result" style="color:var(--success-color)">￥0.00</span>
                 </div>
             </div>
