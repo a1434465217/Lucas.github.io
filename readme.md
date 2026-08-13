@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>嘉善厂区薪资计算器</title>
     <style>
-        /* 全局重置 */
+        /* 全局重置与强制约束 */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -13,81 +13,82 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        body {
+        html, body {
+            width: 100%;
+            max-width: 100vw; /* 强制最大宽度为视口宽度 */
+            overflow-x: hidden; /* 彻底禁止横向滚动 */
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f2f2f7; /* iOS 风格浅灰背景 */
+            background-color: #f2f2f7;
             color: #1c1c1e;
             line-height: 1.5;
-            /* 确保背景铺满，消除白边 */
-            min-height: 100vh;
-            width: 100%;
-            overflow-x: hidden; /* 禁止横向滚动 */
         }
 
-        /* 容器限制最大宽度，但在手机上占满全屏 */
+        /* 主容器：自适应宽度，两侧留白较小 */
         .container {
+            width: 100%;
             max-width: 600px;
             margin: 0 auto;
-            padding: 16px;
+            padding: 12px; /* 减小两侧留白 */
             padding-bottom: 40px;
         }
 
         header {
             text-align: center;
-            margin-bottom: 20px;
-            padding-top: 10px;
+            margin-bottom: 16px;
+            padding-top: 8px;
         }
 
         h1 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             color: #000;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .subtitle {
-            font-size: 13px;
+            font-size: 12px;
             color: #8e8e93;
             background: rgba(0,0,0,0.05);
             display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
+            padding: 4px 10px;
+            border-radius: 10px;
         }
 
-        /* 卡片样式 */
+        /* 卡片样式：圆角更小，适应移动端 */
         .card {
             background: #ffffff;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             border: 1px solid rgba(0,0,0,0.02);
+            width: 100%; /* 确保不溢出 */
         }
 
         .card-header {
             display: flex;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             border-bottom: 1px solid #f0f0f0;
-            padding-bottom: 12px;
+            padding-bottom: 10px;
         }
 
         .card-header h2 {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 600;
         }
 
         .card-icon {
-            margin-right: 8px;
-            font-size: 18px;
+            margin-right: 6px;
+            font-size: 16px;
         }
 
         /* 分组标题 */
         .group-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: #007aff;
-            margin: 16px 0 8px 0;
+            margin: 12px 0 6px 0;
             display: flex;
             align-items: center;
         }
@@ -95,44 +96,41 @@
         .group-title::before {
             content: '';
             display: block;
-            width: 4px;
-            height: 14px;
+            width: 3px;
+            height: 12px;
             background: #007aff;
             border-radius: 2px;
-            margin-right: 6px;
+            margin-right: 5px;
         }
 
-        /* 响应式网格布局 */
+        /* 响应式网格布局：手机端默认单列，稍宽屏幕双列 */
         .input-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* 默认两列 */
-            gap: 12px;
+            grid-template-columns: 1fr; /* 默认单列，最安全 */
+            gap: 10px;
+            width: 100%;
         }
 
-        /* 全宽元素 */
-        .full-width {
-            grid-column: span 2;
-        }
-
-        /* 极窄屏幕适配（如 iPhone SE） */
-        @media (max-width: 350px) {
+        /* 当屏幕宽度大于 375px (iPhone SE/8) 时尝试双列 */
+        @media (min-width: 375px) {
             .input-grid {
-                grid-template-columns: 1fr; /* 变为单列 */
+                grid-template-columns: 1fr 1fr;
             }
             .full-width {
-                grid-column: span 1;
+                grid-column: span 2;
             }
         }
 
         .input-item {
             position: relative;
+            width: 100%; /* 确保占满格子 */
         }
 
         .input-item label {
             display: block;
-            font-size: 13px;
+            font-size: 12px;
             color: #8e8e93;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             font-weight: 500;
         }
 
@@ -140,12 +138,13 @@
             position: relative;
             display: flex;
             align-items: center;
+            width: 100%;
         }
 
         .input-icon {
             position: absolute;
-            left: 10px;
-            font-size: 16px;
+            left: 8px;
+            font-size: 14px;
             z-index: 1;
             opacity: 0.6;
         }
@@ -155,22 +154,24 @@
         input[type="date"],
         select {
             width: 100%;
-            padding: 12px 12px 12px 36px; /* 左侧留出图标位置 */
+            padding: 10px 10px 10px 32px; /* 左侧留出图标位置 */
             border: 1px solid #e5e5ea;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 16px; /* 关键：16px 防止 iOS 自动缩放页面 */
             background: #f9f9fb;
             color: #000;
             transition: all 0.2s;
-            appearance: none; /* 移除默认样式 */
+            appearance: none;
             -webkit-appearance: none;
+            /* 确保输入框不会撑开父容器 */
+            max-width: 100%; 
         }
 
         input:focus {
             border-color: #007aff;
             background: #fff;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
         }
 
         input[readonly] {
@@ -182,20 +183,21 @@
         /* 切换开关样式 */
         .toggle-container {
             background: #e5e5ea;
-            border-radius: 8px;
+            border-radius: 6px;
             padding: 2px;
             display: flex;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
+            width: 100%;
         }
 
         .toggle-option {
             flex: 1;
             text-align: center;
-            padding: 8px 0;
-            font-size: 14px;
+            padding: 6px 0;
+            font-size: 13px;
             font-weight: 600;
             color: #8e8e93;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -203,22 +205,22 @@
         .toggle-option.active {
             background: #fff;
             color: #007aff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
         /* 按钮样式 */
         .btn-calc {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: #007aff;
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
+            margin-top: 16px;
+            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
             transition: transform 0.1s;
         }
 
@@ -229,12 +231,13 @@
 
         /* 结果展示区 */
         .result-card {
-            margin-top: 20px;
+            margin-top: 16px;
             background: #fff;
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
             border: 1px solid #e5e5ea;
             animation: slideUp 0.3s ease-out;
+            width: 100%;
         }
 
         @keyframes slideUp {
@@ -244,8 +247,8 @@
 
         .result-header {
             background: #f0f8ff;
-            padding: 10px 16px;
-            font-size: 14px;
+            padding: 8px 12px;
+            font-size: 13px;
             font-weight: 600;
             color: #007aff;
             border-bottom: 1px solid #e5e5ea;
@@ -258,9 +261,9 @@
         .result-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 16px;
+            padding: 8px 12px;
             border-bottom: 1px dashed #f0f0f0;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .result-item:last-child {
@@ -282,7 +285,7 @@
 
         .result-total {
             background: #fafafa;
-            padding: 16px;
+            padding: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -292,11 +295,11 @@
         .result-total .label {
             font-weight: 700;
             color: #000;
-            font-size: 15px;
+            font-size: 14px;
         }
 
         .result-total .val {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
             color: #007aff;
         }
@@ -304,23 +307,23 @@
         /* 底部说明 */
         .footer-info {
             background: #fff9e6;
-            border-left: 4px solid #ffc107;
-            padding: 12px;
+            border-left: 3px solid #ffc107;
+            padding: 10px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
             color: #666;
-            margin-top: 24px;
-            line-height: 1.6;
+            margin-top: 20px;
+            line-height: 1.5;
         }
 
         .footer-info h4 {
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             color: #d39e00;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .footer-info ul {
-            padding-left: 18px;
+            padding-left: 16px;
         }
     </style>
 </head>
@@ -475,7 +478,7 @@
             </div>
         </div>
 
-        <div class="input-item full-width" id="group-standard" style="margin-top:12px">
+        <div class="input-item full-width" id="group-standard" style="margin-top:10px">
             <label>同工同酬应发薪资 (可手动修改)</label>
             <div class="input-wrapper">
                 <span class="input-icon">💵</span>
@@ -483,8 +486,8 @@
             </div>
         </div>
 
-        <div id="group-meal-allowance" style="margin-top:15px">
-            <label style="font-size:14px;font-weight:600;margin-bottom:8px;display:block">餐补扣除方案</label>
+        <div id="group-meal-allowance" style="margin-top:12px">
+            <label style="font-size:13px;font-weight:600;margin-bottom:6px;display:block">餐补扣除方案</label>
             <div class="toggle-container">
                 <div class="toggle-option active" id="btn-first-month" onclick="switchMealMode('first')">首月入职</div>
                 <div class="toggle-option" id="btn-non-first-month" onclick="switchMealMode('non-first')">非首月</div>
@@ -513,11 +516,11 @@
 
         <button class="btn-calc" onclick="calculatePart2()">计算最终返费</button>
 
-        <div id="part2-result-box" style="display:none; margin-top:20px;">
+        <div id="part2-result-box" style="display:none; margin-top:16px;">
             <div class="result-card">
                 <div class="result-header">🎉 预计到手返费</div>
-                <div class="result-total" style="border-top:none; padding: 20px;">
-                    <span class="label" id="result-label" style="font-size:14px;color:#666">打包差额：</span>
+                <div class="result-total" style="border-top:none; padding: 16px;">
+                    <span class="label" id="result-label" style="font-size:13px;color:#666">打包差额：</span>
                     <span class="val" id="final-result" style="color:#34c759">￥0.00</span>
                 </div>
             </div>
