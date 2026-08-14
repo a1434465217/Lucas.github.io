@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -90,7 +91,7 @@
 <div class="container">
     <header>
         <h1>💰 薪资与返费计算器</h1>
-        <div class="subtitle">嘉善厂区专用 · 智能月份识别</div>
+        <div class="subtitle">嘉善厂区专用 · 工具仅供参考</div>
     </header>
 
     <!-- ================= 板块一：应发薪资计算 ================= -->
