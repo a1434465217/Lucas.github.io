@@ -127,14 +127,14 @@
                 </div>
             </div>
             <div class="input-item">
-                <label>计薪天数 (目标月份标准工作日)</label>
+                <label>计薪天数 </label>
                 <div class="input-wrapper">
                     <span class="input-icon">📅</span>
                     <input type="number" id="scheduled_days" placeholder="自动计算" readonly>
                 </div>
             </div>
             <div class="input-item">
-                <label>实际出勤 (目标月份出勤)</label>
+                <label>实际出勤</label>
                 <div class="input-wrapper">
                     <span class="input-icon">✅</span>
                     <input type="number" id="actual_days" placeholder="请输入">
@@ -145,21 +145,21 @@
         <div class="group-title">加班工时 (小时)</div>
         <div class="input-grid">
             <div class="input-item">
-                <label>平时 1.5倍(周一至周五超8小时外的工作时长)</label>
+                <label>平时 1.5倍</label>
                 <div class="input-wrapper">
                     <span class="input-icon">⏰</span>
                     <input type="number" id="ot_1" placeholder="0" step="0.5">
                 </div>
             </div>
             <div class="input-item">
-                <label>周末 2.0倍(周六周日的工作时长)</label>
+                <label>周末 2.0倍</label>
                 <div class="input-wrapper">
                     <span class="input-icon">📆</span>
                     <input type="number" id="ot_2" placeholder="0" step="0.5">
                 </div>
             </div>
             <div class="input-item full-width">
-                <label>法定 3.0倍(国家法定节假日的工作时长)</label>
+                <label>国家法定节假日 3.0倍</label>
                 <div class="input-wrapper">
                     <span class="input-icon">🇨🇳</span>
                     <input type="number" id="ot_3" placeholder="0" step="0.5">
