@@ -30,7 +30,21 @@
             .full-width { grid-column: span 2; }
         }
         .input-item { position: relative; width: 100%; }
-        .input-item label { display: block; font-size: 12px; color: #8e8e93; margin-bottom: 4px; font-weight: 500; }
+        
+        /* Label Styling with Highlight */
+        .input-item label { 
+            display: block; 
+            font-size: 12px; 
+            color: #8e8e93; 
+            margin-bottom: 4px; 
+            font-weight: 500; 
+        }
+        .highlight-text {
+            color: #ff9500; /* 醒目的橙色 */
+            font-weight: 700; /* 加粗 */
+            margin-left: 2px;
+        }
+
         .input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
         .input-icon { position: absolute; left: 8px; font-size: 14px; z-index: 1; opacity: 0.6; pointer-events: none; }
         
@@ -126,18 +140,20 @@
                      <span id="calc-type-badge" class="smart-tag" style="display:none"></span>
                 </div>
             </div>
-            <div class="input-item">
-                <label>计薪天数 </label>
+            
+            <!-- 修改点：计薪天数和实际出勤分别占一行，且括号内容高亮 -->
+            <div class="input-item full-width">
+                <label>计薪天数 <span class="highlight-text">(目标月份标准工作日)</span></label>
                 <div class="input-wrapper">
                     <span class="input-icon">📅</span>
                     <input type="number" id="scheduled_days" placeholder="自动计算" readonly>
                 </div>
             </div>
-            <div class="input-item">
-                <label>实际出勤</label>
+            <div class="input-item full-width">
+                <label>实际出勤 <span class="highlight-text">(当月每周一至周五的实际出勤天数)</span></label>
                 <div class="input-wrapper">
                     <span class="input-icon">✅</span>
-                    <input type="number" id="actual_days" placeholder="请输入">
+                    <input type="number" id="actual_days" placeholder="请输入" onblur="validateActualDays()" onkeypress="if(event.keyCode==13) validateActualDays()">
                 </div>
             </div>
         </div>
@@ -159,7 +175,7 @@
                 </div>
             </div>
             <div class="input-item full-width">
-                <label>国家法定节假日 3.0倍</label>
+                <label>法定 3.0倍</label>
                 <div class="input-wrapper">
                     <span class="input-icon">🇨🇳</span>
                     <input type="number" id="ot_3" placeholder="0" step="0.5">
@@ -177,14 +193,14 @@
                 </div>
             </div>
             <div class="input-item">
-                <label>其他津贴(岗位津贴...)</label>
+                <label>其他津贴 <span class="highlight-text">(岗位津贴...)</span></label>
                 <div class="input-wrapper">
                     <span class="input-icon">➕</span>
                     <input type="number" id="other_allowance" placeholder="0">
                 </div>
             </div>
             <div class="input-item full-width">
-                <label>其他扣除(社保/事假...)</label>
+                <label>其他扣除 <span class="highlight-text">(社保/事假...)</span></label>
                 <div class="input-wrapper">
                     <span class="input-icon">➖</span>
                     <input type="number" id="other_deduction" placeholder="0">
@@ -233,7 +249,7 @@
 
         <div class="input-grid">
             <div class="input-item full-width">
-                <label>总工时 (H)</label>
+                <label>总工时</label>
                 <div class="input-wrapper">
                     <span class="input-icon">⏳</span>
                     <input type="number" id="hours" placeholder="0" step="0.5">
@@ -241,7 +257,7 @@
                 <button class="btn-auto" onclick="autoCalcTotalHours()">🔄 重新自动计算总工时</button>
             </div>
             <div class="input-item">
-                <label>单价 (元/H)</label>
+                <label>单价</label>
                 <div class="input-wrapper">
                     <span class="input-icon">🏷️</span>
                     <input type="number" id="price" placeholder="0">
@@ -250,7 +266,7 @@
         </div>
 
         <div class="input-item full-width" id="group-standard" style="margin-top:10px">
-            <label>同工同酬应发薪资 (可手动修改)</label>
+            <label>同工同酬应发薪资 <span class="highlight-text">(可手动填写)</span></label>
             <div class="input-wrapper">
                 <span class="input-icon">💵</span>
                 <input type="number" id="standard_salary" placeholder="自动带入或手动输入">
@@ -259,7 +275,7 @@
 
         <!-- 餐补扣除方案 (重构版) -->
         <div id="group-meal-allowance" style="margin-top:16px; border-top: 1px dashed #e5e5ea; padding-top: 16px;">
-            <label style="font-size:13px;font-weight:600;margin-bottom:8px;display:block; color: #007aff;">餐补扣除方案</label>
+            <label style="font-size:13px;font-weight:600;margin-bottom:8px;display:block; color: #007aff;">餐补折算</label>
             
             <div class="input-item full-width">
                 <label>请选择需要计算餐补的月份</label>
@@ -280,17 +296,6 @@
             <!-- 次月计算详情展示 -->
             <div id="meal-next-info" class="info-box" style="display: none;">
                 次月餐补扣除计算：300元 ÷ <span id="meal-next-total-days">0</span>天(当月计薪天数) × <span id="meal-next-actual-days">0</span>天(从<span id="meal-next-start-date"></span>起算的工作日) = <strong>￥<span id="meal-next-deduct">0.00</span></strong>
-            </div>
-
-            <!-- 次月输入框 (保留以备不时之需，但主要逻辑已改为自动计算) -->
-            <div id="meal-next-input" style="display: none; margin-top: 10px;">
-                <div class="input-item full-width">
-                    <label>上月已扣餐补 (0-300)</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">💸</span>
-                        <input type="number" id="last_month_deducted" placeholder="例如：150">
-                    </div>
-                </div>
             </div>
             
             <!-- 其他月提示 -->
@@ -318,7 +323,7 @@
             <h2>返费发放时间测算</h2>
         </div>
         
-        <label style="font-size:13px;font-weight:600;margin-bottom:8px;display:block">a. 请选择协议上的补差要求</label>
+        <label style="font-size:13px;font-weight:600;margin-bottom:8px;display:block">请选择协议上的补差要求</label>
         <div class="radio-group" id="release_type_group">
             <label class="radio-item checked" onclick="selectRadio(this)">
                 <input type="radio" name="release_type" value="next_month_15" checked>
@@ -335,7 +340,7 @@
         </div>
 
         <div class="input-item full-width" style="margin-top:12px">
-            <label>b. 你的入职日期 (自动同步上方)</label>
+            <label>开始上班日期 <span class="highlight-text">(自动同步开始上班日期)</span></label>
             <div class="input-wrapper">
                 <span class="input-icon">📅</span>
                 <input type="text" id="release_entry_date_display" readonly style="background:#f2f2f7; color:#8e8e93;" placeholder="请先在上方填写开始上班日期">
@@ -364,11 +369,11 @@
     <div class="footer-info">
         <h4>💡 特别说明</h4>
         <ul>
-            <li><strong>打包价：</strong>工时 × 工价 - 应发薪资 - 餐补扣除。</li>
-            <li><strong>差价：</strong>工时 × 工价 - 餐补扣除。</li>
-            <li><strong>首月餐补：</strong>标准(300元) ÷ 当月总工作日 × 剩余可出勤天数。</li>
-            <li><strong>非首月：</strong>若上月未扣满300，本月补扣差额。</li>
-            </ul>
+            <li><strong>打包价：</strong>工时 × 工价 - 应发薪资 - 首月餐补折算。</li>
+            <li><strong>差价：</strong>工时 × 工价 - 首月餐补折算。</li>
+            <li><strong>首月餐补：</strong>标准(300元 ÷ 当月总工作日天数 × 剩余可出勤工作日天数)。</li>
+            <li><strong>非首月：</strong>若首月未扣满300元，次月补扣差额。</li>
+        </ul>
     </div>
 </div>
 
@@ -448,11 +453,13 @@
         updateCalcData(type, calcYear, calcMonth, startDay);
     }
 
-    // 根据类型更新板块一数据
+    // 【修改后】根据类型更新板块一数据 - 统一使用整月工作日
     function updateCalcData(type, year, month, startDay) {
         const jsMonth = month - 1;
-        // 获取该月标准计薪天数 (不含周末和法定节假日)
-        const totalWorkdays = getWorkdaysInMonth(year, jsMonth);
+        
+        // 【核心修改】不再判断 type，直接计算所选月份的完整标准工作日
+        let totalWorkdays = getWorkdaysInMonth(year, jsMonth);
+
         document.getElementById('scheduled_days').value = totalWorkdays;
 
         let mealAmount = 0, mealIncluded = false, mealText = '';
@@ -485,13 +492,11 @@
         
         const firstInfo = document.getElementById('meal-first-info');
         const nextInfo = document.getElementById('meal-next-info');
-        const nextInput = document.getElementById('meal-next-input');
         const otherInfo = document.getElementById('meal-other-info');
 
         // 重置UI
         firstInfo.style.display = 'none';
         nextInfo.style.display = 'none';
-        nextInput.style.display = 'none';
         otherInfo.style.display = 'none';
         badge.style.display = 'none';
         window.currentMealDeduct = 0;
@@ -571,21 +576,47 @@
         if (document.getElementById('meal_month_picker').value) handleMealMonthChange();
     });
 
-    // 自动计算总工时
+    // 【已修改】自动计算总工时 - 简化逻辑
     function autoCalcTotalHours() {
         const actualDays = parseFloat(document.getElementById('actual_days').value) || 0;
         const ot1 = parseFloat(document.getElementById('ot_1').value) || 0;
         const ot2 = parseFloat(document.getElementById('ot_2').value) || 0;
         const ot3 = parseFloat(document.getElementById('ot_3').value) || 0;
-        const deductDays = Math.floor(ot2 / 10) + Math.floor(ot3 / 10);
-        const effectiveDays = Math.max(0, actualDays - deductDays);
-        const totalHours = (effectiveDays * 8) + ot1 + ot2 + ot3;
+        
+        // 新逻辑：实际出勤天数 * 8 + 所有加班
+        const totalHours = (actualDays * 8) + ot1 + ot2 + ot3;
+        
         document.getElementById('hours').value = totalHours % 1 === 0 ? totalHours : totalHours.toFixed(1);
     }
 
     ['actual_days', 'ot_1', 'ot_2', 'ot_3'].forEach(id => {
         document.getElementById(id).addEventListener('input', autoCalcTotalHours);
     });
+
+    // 新增：实际出勤天数实时校验函数
+    function validateActualDays() {
+        const actualInput = document.getElementById('actual_days');
+        const scheduledInput = document.getElementById('scheduled_days');
+        
+        const actualVal = parseFloat(actualInput.value);
+        const scheduledVal = parseFloat(scheduledInput.value);
+
+        if (isNaN(actualVal)) return; // 如果为空或非数字，暂不处理
+
+        if (actualVal < 1) {
+            alert("实际出勤天数不能小于 1 天");
+            actualInput.value = "";
+            actualInput.focus();
+            return;
+        }
+
+        if (scheduledVal > 0 && actualVal > scheduledVal) {
+            alert(`错误：实际出勤天数 (${actualVal}) 指当月每周的周一到周五实际出勤总天数，不会大于当月的计薪总天数 (${scheduledVal})，请重新输入`);
+            actualInput.value = "";
+            actualInput.focus();
+            return;
+        }
+    }
 
     // 计算板块一
     function calculatePart1() {
