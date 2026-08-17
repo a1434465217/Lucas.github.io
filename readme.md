@@ -8,22 +8,18 @@
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f2f2f7; color: #1c1c1e; line-height: 1.5; padding-bottom: 40px; }
         .container { width: 100%; max-width: 600px; margin: 0 auto; padding: 12px; }
         
-        /* Header */
         header { text-align: center; margin-bottom: 16px; padding-top: 8px; }
         h1 { font-size: 20px; font-weight: 700; color: #000; margin-bottom: 4px; }
         .subtitle { font-size: 12px; color: #8e8e93; background: rgba(0,0,0,0.05); display: inline-block; padding: 4px 10px; border-radius: 10px; }
 
-        /* Cards */
         .card { background: #ffffff; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); border: 1px solid rgba(0,0,0,0.02); }
         .card-header { display: flex; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; }
         .card-header h2 { font-size: 16px; font-weight: 600; }
         .card-icon { margin-right: 6px; font-size: 16px; }
         
-        /* Groups */
         .group-title { font-size: 13px; font-weight: 600; color: #007aff; margin: 12px 0 6px 0; display: flex; align-items: center; }
         .group-title::before { content: ''; display: block; width: 3px; height: 12px; background: #007aff; border-radius: 2px; margin-right: 5px; }
 
-        /* Inputs */
         .input-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         @media (min-width: 375px) {
             .input-grid { grid-template-columns: 1fr 1fr; }
@@ -31,19 +27,8 @@
         }
         .input-item { position: relative; width: 100%; }
         
-        /* Label Styling with Highlight */
-        .input-item label { 
-            display: block; 
-            font-size: 12px; 
-            color: #8e8e93; 
-            margin-bottom: 4px; 
-            font-weight: 500; 
-        }
-        .highlight-text {
-            color: #ff9500; /* 醒目的橙色 */
-            font-weight: 700; /* 加粗 */
-            margin-left: 2px;
-        }
+        .input-item label { display: block; font-size: 12px; color: #8e8e93; margin-bottom: 4px; font-weight: 500; }
+        .highlight-text { color: #ff9500; font-weight: 700; margin-left: 2px; }
 
         .input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
         .input-icon { position: absolute; left: 8px; font-size: 14px; z-index: 1; opacity: 0.6; pointer-events: none; }
@@ -54,7 +39,6 @@
         input:focus { border-color: #007aff; background: #fff; outline: none; box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1); }
         input[readonly] { background: #f2f2f7; color: #8e8e93; border-color: transparent; cursor: default; }
 
-        /* Badges & Buttons */
         .smart-tag { display: inline-block; font-size: 11px; padding: 2px 6px; border-radius: 4px; margin-left: 8px; font-weight: 600; }
         .tag-current { background: #e0f2fe; color: #0284c7; }
         .tag-next { background: #dcfce7; color: #16a34a; }
@@ -64,12 +48,10 @@
         .btn-calc:active { transform: scale(0.98); background: #0062cc; }
         .btn-auto { padding: 6px 12px; background: #34c759; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 6px; box-shadow: 0 1px 4px rgba(52, 199, 89, 0.2); }
         
-        /* Toggles */
         .toggle-container { background: #e5e5ea; border-radius: 6px; padding: 2px; display: flex; margin-bottom: 12px; width: 100%; }
         .toggle-option { flex: 1; text-align: center; padding: 6px 0; font-size: 13px; font-weight: 600; color: #8e8e93; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
         .toggle-option.active { background: #fff; color: #007aff; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
 
-        /* Results */
         .result-card { margin-top: 16px; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e5e5ea; animation: slideUp 0.3s ease-out; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .result-header { background: #f0f8ff; padding: 8px 12px; font-size: 13px; font-weight: 600; color: #007aff; border-bottom: 1px solid #e5e5ea; }
@@ -78,12 +60,10 @@
         .result-item:last-child { border-bottom: none; }
         .result-item .label { color: #666; flex: 1; }
         .result-item .val { font-weight: 500; color: #000; text-align: right; }
-        .result-item.deduct .val { color: #ff3b30; }
         .result-total { background: #fafafa; padding: 12px; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #007aff; }
         .result-total .label { font-weight: 700; color: #000; font-size: 14px; }
         .result-total .val { font-size: 18px; font-weight: 800; color: #007aff; }
 
-        /* Radio Group */
         .radio-group { display: flex; flex-direction: column; gap: 8px; width: 100%; }
         .radio-item { display: flex; align-items: center; padding: 12px; background: #f9f9fb; border: 1px solid #e5e5ea; border-radius: 8px; cursor: pointer; transition: all 0.2s; width: 100%; }
         .radio-item:active { background: #f0f0f5; }
@@ -141,7 +121,6 @@
                 </div>
             </div>
             
-            <!-- 修改点：计薪天数和实际出勤分别占一行，且括号内容高亮 -->
             <div class="input-item full-width">
                 <label>计薪天数 <span class="highlight-text">(目标月份标准工作日)</span></label>
                 <div class="input-wrapper">
@@ -161,21 +140,21 @@
         <div class="group-title">加班工时 (小时)</div>
         <div class="input-grid">
             <div class="input-item">
-                <label>平时 1.5倍</label>
+                <label>平时 (1.5倍)</label>
                 <div class="input-wrapper">
                     <span class="input-icon">⏰</span>
                     <input type="number" id="ot_1" placeholder="0" step="0.5">
                 </div>
             </div>
             <div class="input-item">
-                <label>周末 2.0倍</label>
+                <label>周末 (2倍)</label>
                 <div class="input-wrapper">
                     <span class="input-icon">📆</span>
                     <input type="number" id="ot_2" placeholder="0" step="0.5">
                 </div>
             </div>
             <div class="input-item full-width">
-                <label>法定 3.0倍</label>
+                <label>法定 (3倍)</label>
                 <div class="input-wrapper">
                     <span class="input-icon">🇨🇳</span>
                     <input type="number" id="ot_3" placeholder="0" step="0.5">
@@ -183,27 +162,20 @@
             </div>
         </div>
 
-        <div class="group-title">津贴与扣除</div>
+        <div class="group-title">津贴</div>
         <div class="input-grid">
             <div class="input-item">
-                <label>夜班天数</label>
+                <label>夜班出勤天数</label>
                 <div class="input-wrapper">
                     <span class="input-icon">🌙</span>
                     <input type="number" id="night_shift_days" placeholder="0">
                 </div>
             </div>
             <div class="input-item">
-                <label>其他津贴 <span class="highlight-text">(岗位津贴...)</span></label>
+                <label>其他津贴<span class="highlight-text">(岗位津贴...)</span></label>
                 <div class="input-wrapper">
                     <span class="input-icon">➕</span>
                     <input type="number" id="other_allowance" placeholder="0">
-                </div>
-            </div>
-            <div class="input-item full-width">
-                <label>其他扣除 <span class="highlight-text">(社保/事假...)</span></label>
-                <div class="input-wrapper">
-                    <span class="input-icon">➖</span>
-                    <input type="number" id="other_deduction" placeholder="0">
                 </div>
             </div>
         </div>
@@ -225,7 +197,6 @@
                     </div>
                     <div class="result-item"><span class="label">夜班津贴</span><span class="val" id="res-night">￥0.00</span></div>
                     <div class="result-item"><span class="label">其他津贴</span><span class="val" id="res-other-allow">￥0.00</span></div>
-                    <div class="result-item deduct"><span class="label">其他扣除</span><span class="val" id="res-other-deduct">-￥0.00</span></div>
                 </div>
                 <div class="result-total">
                     <span class="label" id="part1-result-label">应发总额</span>
@@ -249,7 +220,7 @@
 
         <div class="input-grid">
             <div class="input-item full-width">
-                <label>总工时</label>
+                <label>总工时 (H)</label>
                 <div class="input-wrapper">
                     <span class="input-icon">⏳</span>
                     <input type="number" id="hours" placeholder="0" step="0.5">
@@ -257,7 +228,7 @@
                 <button class="btn-auto" onclick="autoCalcTotalHours()">🔄 重新自动计算总工时</button>
             </div>
             <div class="input-item">
-                <label>单价</label>
+                <label>工价 (元/H)</label>
                 <div class="input-wrapper">
                     <span class="input-icon">🏷️</span>
                     <input type="number" id="price" placeholder="0">
@@ -266,41 +237,36 @@
         </div>
 
         <div class="input-item full-width" id="group-standard" style="margin-top:10px">
-            <label>同工同酬应发薪资 <span class="highlight-text">(可手动填写)</span></label>
+            <label>同工同酬应发薪资 <span class="highlight-text">(可手动输入)</span></label>
             <div class="input-wrapper">
                 <span class="input-icon">💵</span>
                 <input type="number" id="standard_salary" placeholder="自动带入或手动输入">
             </div>
         </div>
 
-        <!-- 餐补扣除方案 (重构版) -->
+        <!-- 餐补扣除方案 (已固定引用第一板块月份) -->
         <div id="group-meal-allowance" style="margin-top:16px; border-top: 1px dashed #e5e5ea; padding-top: 16px;">
-            <label style="font-size:13px;font-weight:600;margin-bottom:8px;display:block; color: #007aff;">餐补折算</label>
+            <label style="font-size:13px;font-weight:600;margin-bottom:8px;display:block; color: #007aff;">首月餐补折算 (自动引用上方选择的需要计算月份)</label>
             
-            <div class="input-item full-width">
-                <label>请选择需要计算餐补的月份</label>
-                <div class="input-wrapper">
-                    <span class="input-icon">🗓️</span>
-                    <input type="month" id="meal_month_picker" onchange="handleMealMonthChange()">
-                </div>
-                <div style="margin-top: 4px;">
-                     <span id="meal-type-badge" class="smart-tag" style="display:none"></span>
-                </div>
-            </div>
-
             <!-- 首月计算详情展示 -->
             <div id="meal-first-info" class="info-box" style="display: none;">
-                首月餐补扣除计算：300元 ÷ <span id="meal-first-total-days">0</span>天(当月计薪天数) × <span id="meal-first-actual-days">0</span>天(应出勤天数) = <strong>￥<span id="meal-first-deduct">0.00</span></strong>
+                入职首月餐补扣除计算：300元 ÷ <span id="meal-first-total-days">0</span>天(当月计薪天数) × <span id="meal-first-actual-days">0</span>天(应出勤天数) = <strong>￥<span id="meal-first-deduct">0.00</span></strong>
             </div>
             
-            <!-- 次月计算详情展示 -->
+            <!-- 次月计算详情展示 (严格遵循 300 - 入职当月扣除) -->
             <div id="meal-next-info" class="info-box" style="display: none;">
-                次月餐补扣除计算：300元 ÷ <span id="meal-next-total-days">0</span>天(当月计薪天数) × <span id="meal-next-actual-days">0</span>天(从<span id="meal-next-start-date"></span>起算的工作日) = <strong>￥<span id="meal-next-deduct">0.00</span></strong>
+                次月餐补扣除计算：<br>
+                1. 入职当月已扣除：￥<span id="meal-next-first-deduct">0.00</span><br>
+                2. 次月扣除 = 300 - 入职当月扣除 = 300 - <span id="meal-next-first-deduct2">0.00</span> = <strong>￥<span id="meal-next-deduct">0.00</span></strong>
             </div>
             
             <!-- 其他月提示 -->
             <div id="meal-other-info" class="info-box" style="display: none;">
-                💡 该月份为非入职首月及次月，无需扣除餐补。
+                💡 首月餐补已全部折减，不再扣除餐补。
+            </div>
+            
+            <div id="meal-warn-info" class="info-box" style="display: none; border-color: #ff3b30; color: #ff3b30;">
+                ⚠️ 请先在第一板块填写“开始上班日期”并选择“需要计算的年份和月份”。
             </div>
         </div>
 
@@ -339,15 +305,6 @@
             </label>
         </div>
 
-        <div class="input-item full-width" style="margin-top:12px">
-            <label>开始上班日期 <span class="highlight-text">(自动同步开始上班日期)</span></label>
-            <div class="input-wrapper">
-                <span class="input-icon">📅</span>
-                <input type="text" id="release_entry_date_display" readonly style="background:#f2f2f7; color:#8e8e93;" placeholder="请先在上方填写开始上班日期">
-            </div>
-            <input type="hidden" id="release_entry_date">
-        </div>
-
         <button class="btn-calc" onclick="calculatePart3()">测算发放时间</button>
 
         <div id="part3-result-box" style="display:none; margin-top:16px;">
@@ -371,9 +328,9 @@
         <ul>
             <li><strong>打包价：</strong>工时 × 工价 - 应发薪资 - 首月餐补折算。</li>
             <li><strong>差价：</strong>工时 × 工价 - 首月餐补折算。</li>
-            <li><strong>首月餐补：</strong>标准(300元 ÷ 当月总工作日天数 × 剩余可出勤工作日天数)。</li>
+            <li><strong>首月餐补：</strong>标准(300元) ÷ 当月总工作日天数 × 剩余可出勤工作日天数。</li>
             <li><strong>非首月：</strong>若首月未扣满300元，次月补扣差额。</li>
-        </ul>
+            </ul>
     </div>
 </div>
 
@@ -395,22 +352,18 @@
     };
 
     let currentMode = 'package'; 
-    window.currentMealDeduct = 0; // 存储餐补扣除金额
+    window.currentMealInfo = { amount: 300, included: false, text: '生活餐补' };
+    window.currentMealDeduct = 0;
 
-    // 核心工具函数：判断单日是否为工作日 (排除周末和法定节假日)
     function isWorkday(year, month, day) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        // 1. 检查是否在节假日配置表中
         if (holidays2026.hasOwnProperty(dateStr)) {
-            // 如果配置为 true (放假)，则不是工作日；如果配置为 false (调休上班)，则是工作日
             return holidays2026[dateStr] === false; 
         }
-        // 2. 如果不在配置表中，检查是否是普通的周六或周日
         const dayOfWeek = new Date(year, month, day).getDay();
         return dayOfWeek !== 0 && dayOfWeek !== 6;
     }
 
-    // 计算某月总工作日 (计薪天数)
     function getWorkdaysInMonth(year, month) {
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         let workdays = 0;
@@ -420,7 +373,74 @@
         return workdays;
     }
 
-    // 处理板块一：月份选择器变化
+    // 核心函数：计算餐补相关所有信息
+    function getMealInfo(calcMonthVal, startDateVal) {
+        if (!startDateVal || !calcMonthVal) return null;
+        const [startYear, startMonth, startDay] = startDateVal.split('-').map(Number);
+        const [calcYear, calcMonth] = calcMonthVal.split('-').map(Number);
+        const jsMonth = calcMonth - 1;
+        const totalWorkdays = getWorkdaysInMonth(calcYear, jsMonth);
+        
+        const startTotalMonths = startYear * 12 + startMonth;
+        const calcTotalMonths = calcYear * 12 + calcMonth;
+        
+        let type = 'other';
+        if (calcTotalMonths === startTotalMonths) type = 'current';
+        else if (calcTotalMonths === startTotalMonths + 1) type = 'next';
+
+        let part1Amount = 0, part1Included = false, part1Text = '';
+        let part2Deduct = 0;
+        let displayTotalDays = totalWorkdays;
+        let displayActualDays = 0;
+        let firstMonthDeductForNext = 0; // 用于次月展示
+
+        if (type === 'current') {
+            part1Amount = 300; part1Included = false;
+            part1Text = '生活餐补(首月餐补已发放至工牌，不做计算)';
+            
+            let daysInMonth = new Date(calcYear, jsMonth + 1, 0).getDate();
+            let workdaysFromStart = 0;
+            for(let d = startDay; d <= daysInMonth; d++) {
+                if(isWorkday(calcYear, jsMonth, d)) workdaysFromStart++;
+            }
+            displayActualDays = workdaysFromStart;
+            part2Deduct = totalWorkdays > 0 ? (300 / totalWorkdays) * workdaysFromStart : 0;
+        } else if (type === 'next') {
+            // 第一板块：次月应发餐补计算
+            let daysInMonth = new Date(calcYear, jsMonth + 1, 0).getDate();
+            let workdaysFromNextDay = 0;
+            for(let d = startDay + 1; d <= daysInMonth; d++) {
+                if(isWorkday(calcYear, jsMonth, d)) workdaysFromNextDay++;
+            }
+            part1Amount = totalWorkdays > 0 ? (300 / totalWorkdays) * workdaysFromNextDay : 0;
+            part1Included = true;
+            part1Text = `生活餐补(次月折算: ${workdaysFromNextDay}天)`;
+            displayActualDays = workdaysFromNextDay;
+            
+            // 第二板块：次月扣除逻辑 (严格遵循 300 - 入职当月扣除)
+            const startJsMonth = startMonth - 1;
+            const startTotalWorkdays = getWorkdaysInMonth(startYear, startJsMonth);
+            let startDaysInMonth = new Date(startYear, startJsMonth + 1, 0).getDate();
+            let startWorkdaysFromStart = 0;
+            for(let d = startDay; d <= startDaysInMonth; d++) {
+                if(isWorkday(startYear, startJsMonth, d)) startWorkdaysFromStart++;
+            }
+            firstMonthDeductForNext = startTotalWorkdays > 0 ? (300 / startTotalWorkdays) * startWorkdaysFromStart : 0;
+            part2Deduct = 300 - firstMonthDeductForNext;
+        } else {
+            part1Amount = 300; part1Included = true;
+            part1Text = '生活餐补';
+            part2Deduct = 0;
+        }
+
+        return {
+            type, calcYear, calcMonth, jsMonth, totalWorkdays,
+            part1: { amount: part1Amount, included: part1Included, text: part1Text },
+            part2: { deduct: part2Deduct, firstMonthDeduct: firstMonthDeductForNext },
+            display: { totalDays: displayTotalDays, actualDays: displayActualDays }
+        };
+    }
+
     function handleMonthChange() {
         const startDateVal = document.getElementById('training_date').value;
         const calcMonthVal = document.getElementById('calc_month_picker').value;
@@ -431,161 +451,69 @@
             return;
         }
 
-        const [startYear, startMonth, startDay] = startDateVal.split('-').map(Number);
+        const [startYear, startMonth] = startDateVal.split('-').map(Number);
         const [calcYear, calcMonth] = calcMonthVal.split('-').map(Number); 
 
-        let type = '', className = '', text = '';
+        let className = '', text = '';
         const startTotalMonths = startYear * 12 + startMonth;
         const calcTotalMonths = calcYear * 12 + calcMonth;
 
         if (calcTotalMonths === startTotalMonths) {
-            type = 'current'; className = 'tag-current'; text = '当月';
+            className = 'tag-current'; text = '当月';
         } else if (calcTotalMonths === startTotalMonths + 1) {
-            type = 'next'; className = 'tag-next'; text = '次月';
+            className = 'tag-next'; text = '次月';
         } else {
-            type = 'other'; className = 'tag-other'; text = '其他月份';
+            className = 'tag-other'; text = '其他月份';
         }
 
         badge.className = `smart-tag ${className}`;
         badge.innerText = text;
         badge.style.display = 'inline-block';
 
-        updateCalcData(type, calcYear, calcMonth, startDay);
-    }
+        const mealInfo = getMealInfo(calcMonthVal, startDateVal);
+        if (!mealInfo) return;
 
-    // 【修改后】根据类型更新板块一数据 - 统一使用整月工作日
-    function updateCalcData(type, year, month, startDay) {
-        const jsMonth = month - 1;
-        
-        // 【核心修改】不再判断 type，直接计算所选月份的完整标准工作日
-        let totalWorkdays = getWorkdaysInMonth(year, jsMonth);
+        window.currentMealInfo = mealInfo.part1;
+        window.currentMealDeduct = mealInfo.part2.deduct;
+        document.getElementById('scheduled_days').value = mealInfo.totalWorkdays;
 
-        document.getElementById('scheduled_days').value = totalWorkdays;
-
-        let mealAmount = 0, mealIncluded = false, mealText = '';
-        if (type === 'current') {
-            mealAmount = 300; mealIncluded = false;
-            mealText = '生活餐补(首月餐补已发放至工牌，不做计算)';
-        } else if (type === 'next') {
-            // 次月逻辑：300 / 总工作日 * (从 startDay+1 到月底的工作日)
-            const daysInMonth = new Date(year, jsMonth + 1, 0).getDate();
-            let workdaysFromNextDay = 0;
-            // 从 startDay + 1 开始计算
-            for(let d = startDay + 1; d <= daysInMonth; d++) {
-                if(isWorkday(year, jsMonth, d)) workdaysFromNextDay++;
-            }
-            mealAmount = totalWorkdays > 0 ? (300 / totalWorkdays) * workdaysFromNextDay : 0;
-            mealIncluded = true;
-            mealText = `生活餐补(次月折算: ${workdaysFromNextDay}天)`;
-        } else {
-            mealAmount = 300; mealIncluded = true;
-            mealText = '生活餐补';
-        }
-        window.currentMealInfo = { amount: mealAmount, included: mealIncluded, text: mealText };
-    }
-
-    // 处理板块二：餐补月份选择器变化 (核心重构逻辑)
-    function handleMealMonthChange() {
-        const startDateVal = document.getElementById('training_date').value;
-        const mealMonthVal = document.getElementById('meal_month_picker').value;
-        const badge = document.getElementById('meal-type-badge');
-        
+        // 更新板块二 UI
         const firstInfo = document.getElementById('meal-first-info');
         const nextInfo = document.getElementById('meal-next-info');
         const otherInfo = document.getElementById('meal-other-info');
-
-        // 重置UI
+        const warnInfo = document.getElementById('meal-warn-info');
+        
         firstInfo.style.display = 'none';
         nextInfo.style.display = 'none';
         otherInfo.style.display = 'none';
-        badge.style.display = 'none';
-        window.currentMealDeduct = 0;
+        warnInfo.style.display = 'none';
 
-        if (!startDateVal || !mealMonthVal) return;
-
-        const [startYear, startMonth, startDay] = startDateVal.split('-').map(Number);
-        const [mealYear, mealMonth] = mealMonthVal.split('-').map(Number); 
-
-        let type = '', className = '', text = '';
-        const startTotalMonths = startYear * 12 + startMonth;
-        const mealTotalMonths = mealYear * 12 + mealMonth;
-
-        if (mealTotalMonths === startTotalMonths) {
-            type = 'first'; className = 'tag-current'; text = '首月';
-        } else if (mealTotalMonths === startTotalMonths + 1) {
-            type = 'next'; className = 'tag-next'; text = '次月';
-        } else {
-            type = 'other'; className = 'tag-other'; text = '其他月';
-        }
-
-        badge.className = `smart-tag ${className}`;
-        badge.innerText = text;
-        badge.style.display = 'inline-block';
-
-        const jsMonth = mealMonth - 1;
-        const totalWorkdays = getWorkdaysInMonth(mealYear, jsMonth);
-
-        if (type === 'first') {
+        if (mealInfo.type === 'current') {
             firstInfo.style.display = 'block';
-            
-            // 计算从 startDay 到月底的工作日
-            let daysInMonth = new Date(mealYear, jsMonth + 1, 0).getDate();
-            let workdaysFromStart = 0;
-            for(let d = startDay; d <= daysInMonth; d++) {
-                if(isWorkday(mealYear, jsMonth, d)) workdaysFromStart++;
-            }
-            
-            const deductAmount = totalWorkdays > 0 ? (300 / totalWorkdays) * workdaysFromStart : 0;
-            
-            document.getElementById('meal-first-total-days').innerText = totalWorkdays;
-            document.getElementById('meal-first-actual-days').innerText = workdaysFromStart;
-            document.getElementById('meal-first-deduct').innerText = deductAmount.toFixed(2);
-            
-            window.currentMealDeduct = deductAmount;
-        } else if (type === 'next') {
+            document.getElementById('meal-first-total-days').innerText = mealInfo.display.totalDays;
+            document.getElementById('meal-first-actual-days').innerText = mealInfo.display.actualDays;
+            document.getElementById('meal-first-deduct').innerText = mealInfo.part2.deduct.toFixed(2);
+        } else if (mealInfo.type === 'next') {
             nextInfo.style.display = 'block';
-            
-            // 次月逻辑：从 startDay + 1 开始计算
-            let daysInMonth = new Date(mealYear, jsMonth + 1, 0).getDate();
-            let workdaysFromNextDay = 0;
-            for(let d = startDay + 1; d <= daysInMonth; d++) {
-                if(isWorkday(mealYear, jsMonth, d)) workdaysFromNextDay++;
-            }
-
-            const deductAmount = totalWorkdays > 0 ? (300 / totalWorkdays) * workdaysFromNextDay : 0;
-            
-            document.getElementById('meal-next-total-days').innerText = totalWorkdays;
-            document.getElementById('meal-next-actual-days').innerText = workdaysFromNextDay;
-            document.getElementById('meal-next-start-date').innerText = `${mealMonth}月${startDay + 1}日`;
-            document.getElementById('meal-next-deduct').innerText = deductAmount.toFixed(2);
-            
-            window.currentMealDeduct = deductAmount;
+            const firstDeduct = mealInfo.part2.firstMonthDeduct;
+            document.getElementById('meal-next-first-deduct').innerText = firstDeduct.toFixed(2);
+            document.getElementById('meal-next-first-deduct2').innerText = firstDeduct.toFixed(2);
+            document.getElementById('meal-next-deduct').innerText = mealInfo.part2.deduct.toFixed(2);
         } else {
             otherInfo.style.display = 'block';
-            window.currentMealDeduct = 0;
         }
     }
 
-    // 开始上班日期联动
     document.getElementById('training_date').addEventListener('change', function() {
-        const dateVal = this.value;
-        document.getElementById('release_entry_date').value = dateVal;
-        document.getElementById('release_entry_date_display').value = dateVal || '';
-        
         if (document.getElementById('calc_month_picker').value) handleMonthChange();
-        if (document.getElementById('meal_month_picker').value) handleMealMonthChange();
     });
 
-    // 【已修改】自动计算总工时 - 简化逻辑
     function autoCalcTotalHours() {
         const actualDays = parseFloat(document.getElementById('actual_days').value) || 0;
         const ot1 = parseFloat(document.getElementById('ot_1').value) || 0;
         const ot2 = parseFloat(document.getElementById('ot_2').value) || 0;
         const ot3 = parseFloat(document.getElementById('ot_3').value) || 0;
-        
-        // 新逻辑：实际出勤天数 * 8 + 所有加班
         const totalHours = (actualDays * 8) + ot1 + ot2 + ot3;
-        
         document.getElementById('hours').value = totalHours % 1 === 0 ? totalHours : totalHours.toFixed(1);
     }
 
@@ -593,15 +521,13 @@
         document.getElementById(id).addEventListener('input', autoCalcTotalHours);
     });
 
-    // 新增：实际出勤天数实时校验函数
     function validateActualDays() {
         const actualInput = document.getElementById('actual_days');
         const scheduledInput = document.getElementById('scheduled_days');
-        
         const actualVal = parseFloat(actualInput.value);
         const scheduledVal = parseFloat(scheduledInput.value);
 
-        if (isNaN(actualVal)) return; // 如果为空或非数字，暂不处理
+        if (isNaN(actualVal)) return;
 
         if (actualVal < 1) {
             alert("实际出勤天数不能小于 1 天");
@@ -611,14 +537,13 @@
         }
 
         if (scheduledVal > 0 && actualVal > scheduledVal) {
-            alert(`错误：实际出勤天数 (${actualVal}) 指当月每周的周一到周五实际出勤总天数，不会大于当月的计薪总天数 (${scheduledVal})，请重新输入`);
+            alert(`错误：实际出勤天数 (${actualVal}) 不能大于当月的计薪总天数 (${scheduledVal})，请重新输入`);
             actualInput.value = "";
             actualInput.focus();
             return;
         }
     }
 
-    // 计算板块一
     function calculatePart1() {
         const baseSalary = parseFloat(document.getElementById('base_salary').value) || 2490;
         const scheduledDays = parseFloat(document.getElementById('scheduled_days').value) || 0;
@@ -630,7 +555,6 @@
         
         const nightShiftDays = parseFloat(document.getElementById('night_shift_days').value) || 0;
         const otherAllowance = parseFloat(document.getElementById('other_allowance').value) || 0;
-        const otherDeduction = parseFloat(document.getElementById('other_deduction').value) || 0;
 
         const calculatedBase = scheduledDays > 0 ? (baseSalary / scheduledDays) * actualDays : 0;
         const hourlyRate = baseSalary / 21.75 / 8;
@@ -640,9 +564,9 @@
         const totalOtPay = otPay1 + otPay2 + otPay3;
         const nightPay = nightShiftDays * 15;
         
-        let totalSalary = calculatedBase + totalOtPay + nightPay + otherAllowance - otherDeduction;
+        let totalSalary = calculatedBase + totalOtPay + nightPay + otherAllowance;
 
-        const mealInfo = window.currentMealInfo || { amount: 300, included: false, text: '生活餐补' };
+        const mealInfo = window.currentMealInfo;
         let finalTotal = totalSalary;
         if (mealInfo.included) finalTotal += mealInfo.amount;
 
@@ -657,7 +581,6 @@
         
         document.getElementById('res-night').innerText = '￥' + nightPay.toFixed(2);
         document.getElementById('res-other-allow').innerText = '￥' + otherAllowance.toFixed(2);
-        document.getElementById('res-other-deduct').innerText = '-￥' + otherDeduction.toFixed(2);
         
         document.getElementById('part1-result-label').innerText = mealInfo.included ? '应发总额 (含餐补)' : '应发总额 (不含餐补)';
         document.getElementById('part1-result').innerText = '￥' + finalTotal.toFixed(2);
@@ -687,7 +610,6 @@
         document.getElementById('part2-result-box').style.display = 'none';
     }
 
-    // 计算板块二 (返费)
     function calculatePart2() {
         let hours = parseFloat(document.getElementById('hours').value) || 0;
         let price = parseFloat(document.getElementById('price').value) || 0;
@@ -701,14 +623,16 @@
             result = hours * price;
         }
 
-        // 获取餐补扣除
-        const mealMonthVal = document.getElementById('meal_month_picker').value;
-        if (!mealMonthVal) {
-            alert('请在餐补扣除方案中选择需要计算餐补的月份');
+        const calcMonthVal = document.getElementById('calc_month_picker').value;
+        const startDateVal = document.getElementById('training_date').value;
+        
+        if (!calcMonthVal || !startDateVal) {
+            document.getElementById('meal-warn-info').style.display = 'block';
+            alert('请先在第一板块填写“开始上班日期”并选择“需要计算的年份和月份”');
             return;
         }
 
-        // 直接使用全局变量中已经计算好的扣除金额
+        // 扣除餐补 (已剔除其他扣除项)
         result -= window.currentMealDeduct;
         
         document.getElementById('final-result').innerText = '￥' + result.toFixed(2);
@@ -723,32 +647,37 @@
 
     function calculatePart3() {
         const type = document.querySelector('input[name="release_type"]:checked').value;
-        const dateVal = document.getElementById('release_entry_date').value;
+        const calcMonthVal = document.getElementById('calc_month_picker').value;
         
-        if (!dateVal) { alert('请先在上方填写“开始上班日期”'); return; }
+        if (!calcMonthVal) { 
+            alert('请先在第一板块选择“需要计算的年份和月份”'); 
+            return; 
+        }
         
-        const [year, month, day] = dateVal.split('-').map(Number);
-        const entryDate = new Date(year, month - 1, day);
+        const [calcYear, calcMonth] = calcMonthVal.split('-').map(Number);
         let resultDate = new Date();
-        let remark = '';
         
+        // 格式化计算月份字符串 (例如: 2026年08月)
+        const calcMonthStr = `${calcYear}年${String(calcMonth).padStart(2, '0')}月`;
+
         if (type === 'next_month_15') {
-            resultDate = new Date(year, month, 15); remark = '需出勤';
+            resultDate = new Date(calcYear, calcMonth, 15); 
         } else if (type === 'after_30_days') {
-            const date30 = new Date(entryDate); date30.setDate(date30.getDate() + 30);
-            const nextMonth15 = new Date(year, month, 15); 
-            resultDate = date30 <= nextMonth15 ? nextMonth15 : new Date(year, month + 1, 15); 
-            remark = '满足30天后正常离职返费不受影响';
+            resultDate = new Date(calcYear, calcMonth, 15); 
         } else if (type === 'next_month_last_day') {
-            resultDate = new Date(year, month + 1, 0); remark = '需出勤';
+            resultDate = new Date(calcYear, calcMonth + 1, 0); 
         }
         
         const resYear = resultDate.getFullYear();
         const resMonth = String(resultDate.getMonth() + 1).padStart(2, '0');
         const resDay = String(resultDate.getDate()).padStart(2, '0');
+        const resDateStr = `${resYear}年${resMonth}月${resDay}日`;
         
-        document.getElementById('release_date_result').innerText = `${resYear}年${resMonth}月${resDay}日`;
-        document.getElementById('release_remark_result').innerText = remark;
+        // 设置新的备注逻辑
+        const remarkText = `本次计算的返费为${calcMonthStr}，${resDateStr}需出勤。`;
+        
+        document.getElementById('release_date_result').innerText = resDateStr;
+        document.getElementById('release_remark_result').innerText = remarkText;
         document.getElementById('part3-result-box').style.display = 'block';
         document.getElementById('part3-result-box').scrollIntoView({ behavior: 'smooth' });
     }
